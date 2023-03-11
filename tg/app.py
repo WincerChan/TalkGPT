@@ -3,7 +3,7 @@ import logging
 import time
 
 import speech_recognition as sr
-from tg.speech_to_text import listen
+from tg.speech_to_text import listen, select_microphone
 from tg.config import DevConfig
 
 logger = logging.getLogger("")
@@ -53,7 +53,12 @@ def gg_listen():
 
 
 def run():
-    gg_listen()
+    mic = select_microphone()
+    for x in listen(mic):
+        if not x:
+            continue
+        print(f"Ask: {x}")
+        ask(x)
 
 
 if __name__ == "__main__":

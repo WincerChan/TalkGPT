@@ -16,13 +16,18 @@ _load_env()
 
 class DevConfig:
     API_KEY = os.environ.get("API_KEY")
+    REPLYING: bool = False
+    # tts 相关
     AZURE_VOICE_LANG: str = "zh-CN-YunxiNeural"
     GOOGLE_VOICE_LANG: str = "zh"
     TTS_CHOICE: str = "EDGE"  # "EDGE", "GOOGLE"
-    REPLYING: bool = False
-    DEVICE_NAME: str = "Built-in Input"
 
+    # stt 相关
+    DEVICE_NAME: str = "Built-in Input"
+    GOOGLE_INPUT_LANG = "zh-CN"
+    STT_CHOICE = "WHISPER"  # "GOOGLE", "WHISPER"
+
+    # chatgpt 相关
     PREVIOUS_MESSAGES_COUNT: int = 3  # 0 means no contextual conversation
     PREVIOUS_MESSAGES_SAVE_REPLY = True
-
-    SYSTEM_PROMPT = "concisely"
+    SYSTEM_PROMPT = "Answer in simple language"

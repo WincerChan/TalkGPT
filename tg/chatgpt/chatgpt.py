@@ -13,7 +13,7 @@ logger = logging.getLogger("chatgpt")
 
 
 def to_speak(words, last=False):
-    sentence = "".join(words)
+    sentence = "".join(words).replace("\n\n", "\n")
 
     print(sentence, end="", flush=True)
     speak_text(sentence, last=last)
@@ -34,6 +34,7 @@ def build_conversation_context(text):
 def build_sentence_from_stream(stream) -> str:
     reply = ""
     words = []
+    print("Reply: ", end="")
     for word in stream:
         best_choice = word["choices"][0]
         content = best_choice.get("delta").get("content")
@@ -47,6 +48,7 @@ def build_sentence_from_stream(stream) -> str:
             words.clear()
 
     reply += to_speak(words, last=True)
+    print("\n")
     return reply
 
 
