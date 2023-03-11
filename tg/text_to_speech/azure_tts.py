@@ -7,11 +7,13 @@ import threading
 import asyncio
 import queue
 from time import time
-from typing import Union
+import logging
 from tg.config import DevConfig
 
 LANG = DevConfig.AZURE_VOICE_LANG
+logger = logging.getLogger("azure-ttl")
 q = queue.Queue()
+play_queue = queue.Queue()
 
 
 def forever_run(queue):
@@ -75,13 +77,13 @@ def speak_text(text: str, last=False):
     q.put((communicate.stream(), last))
 
 
-play_queue = queue.Queue()
 tts_worker = threading.Thread(target=forever_consume, args=(q, play_queue))
 tts_worker.daemon = True
 tts_worker.start()
 
 
 player_worker = threading.Thread(target=forever_run, args=(play_queue,))
+player_worker.daemon = True
 player_worker.start()
 
 if __name__ == "__main__":
