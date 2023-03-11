@@ -46,8 +46,10 @@ def play_audio(audio_data: bytes, file_format="mp3", last=False) -> None:
 async def forever_consume_queue(queue, play_queue):
     while True:
         comm_stream, last = queue.get()
+        if comm_stream is None:
+            play_queue.put((b"", last))
+            continue
         sentence_bytes: List[bytes] = []
-        t = time()
         async for msg in comm_stream:
             match msg["type"]:
                 case "audio":
@@ -66,6 +68,9 @@ def forever_consume(q, play_q):
 
 
 def speak_text(text: str, last=False):
+    if not text:
+        q.put((None, last))
+        return
     communicate = edge_tts.Communicate(text, LANG)
     q.put((communicate.stream(), last))
 
