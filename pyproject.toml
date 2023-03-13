@@ -51,7 +51,6 @@ dependencies = [
     "gtts>=2.3.1",
     "pocketsphinx>=5.0.0",
     "SpeechRecognition>=3.9.0",
-    "torch>=1.13.1",
 ]
 requires-python = ">=3.11,<4.0"
 license = {text = "GPLv3"}

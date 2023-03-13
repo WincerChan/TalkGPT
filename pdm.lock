@@ -1971,8 +1971,6 @@ requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 summary = "Python 2 and 3 compatibility utilities"
 
 [[package]]
-<<<<<<< HEAD
-=======
 name = "sounddevice"
 version = "0.4.6"
 requires_python = ">=3.7"
@@ -1990,7 +1988,6 @@ dependencies = [
 ]
 
 [[package]]
->>>>>>> dd9b529 (update pdm lock)
 name = "stack-data"
 version = "0.6.2"
 summary = "Extract data from python stack frames and tracebacks for informative displays"
@@ -2039,10 +2036,14 @@ dependencies = [
 [metadata]
 lock_version = "4.1"
 <<<<<<< HEAD
+<<<<<<< HEAD
 content_hash = "sha256:de20469668a43f420eaf5126b8d4c191475fd30f386fdf8725f1624360f9e478"
 =======
 content_hash = "sha256:0fb8dab0f1e540cedb47a73ae10fac17832d4ee959fc48ae88754a56d1263471"
 >>>>>>> dd9b529 (update pdm lock)
+=======
+content_hash = "sha256:b9f0e5669736858140bbebba3bd490ffce5d3c81ac59ea380c3fcec15176d701"
+>>>>>>> e0c14b2 (remove touch deps)
 
 [metadata.files]
 "aiohttp 3.8.4" = [
