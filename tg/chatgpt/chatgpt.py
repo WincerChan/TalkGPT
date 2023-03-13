@@ -2,18 +2,18 @@ import openai
 import asyncio
 import time
 from tg.config import DevConfig
-from ..text_to_speech.text_to_speech import speek_text
+from ..text_to_speech.text_to_speech import speak_text
+from .utils import contains_delimiter
 
 openai.api_key = DevConfig.API_KEY
 
 
-def speek_queue(words):
-    t = time.time()
-    speek_text("".join(words))
-    print(time.time() - t)
+def to_speak(words):
+    speak_text("".join(words))
+    print("".join(words))
 
 
-def chat(text):
+def ask(text):
     messages = [
         {"role": "system", "content": "in concise language"},
         {"role": "user", "content": text},
@@ -26,12 +26,13 @@ def chat(text):
     )
     sentences = []
     for word in stream:
-        if len(sentences) > 10:
-            speek_queue(sentences)
-            sentences.clear()
         choice = word["choices"][0]
         content = choice.get("delta").get("content")
+        if contains_delimiter(content) and len(sentences) > 10:
+            to_speak(sentences)
+            sentences.clear()
+
         if content is None:
             continue
         sentences.append(content)
-    speek_queue(sentences)
+    to_speak(sentences)
