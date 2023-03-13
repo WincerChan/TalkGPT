@@ -43,9 +43,11 @@ def gg_listen():
         if DevConfig.REPLYING:
             continue
         try:
-            ret = r.recognize_google(audio, language="zh-CN")
+            ret = r.recognize_google(audio, language="zh-CN", verbose=False)
         except sr.UnknownValueError:
-            time.sleep(1)
+            input(
+                "No sound is detected, enter hibernation mode, press the Enter key to wake up"
+            )
             continue
         ask(ret)
 
