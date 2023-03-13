@@ -1,5 +1,6 @@
 import logging
 import openai
+import asyncio
 import time
 from tg.config import DevConfig
 from ..text_to_speech.text_to_speech import speak_text
@@ -12,10 +13,10 @@ logger = logging.getLogger("chatgpt")
 
 
 def to_speak(words, last=False):
-    speak_text("".join(words), last=last)
     sentence = "".join(words)
 
     print(sentence, end="", flush=True)
+    speak_text(sentence, last=last)
     return sentence
 
 

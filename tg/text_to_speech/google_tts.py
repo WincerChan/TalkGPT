@@ -3,70 +3,62 @@ from pydub import AudioSegment
 from typing import List
 from pydub.playback import play
 import io
+import logging
 import threading
 import queue
 from tg.config import DevConfig
 
 LANG = DevConfig.GOOGLE_VOICE_LANG
-q = queue.Queue()
+play_queue = queue.Queue()
+logger = logging.getLogger("google-tts")
 
 
-def forever_run(queue):
+def wait_for_play(queue):
     while True:
-        sentence: bytes = queue.get()
-        play_audio(sentence)
+        sentence, last = queue.get()
+        play_audio(sentence, last=last)
 
 
-def play_audio(audio_data: bytes, file_format="mp3") -> None:
-    """
-    Play audio data.
-
-    Args:
-        audio_data (bytes): Audio data to play.
-        file_format (str): Audio file format, e.g., "mp3", "wav".
-    """
+def play_audio(audio_data: bytes, file_format="mp3", last=False) -> None:
     # Create audio segment from audio data
-    try:
-        audio_segment = AudioSegment.from_file(
-            io.BytesIO(audio_data), format=file_format
-        )
-    except Exception as e:
-        pass
-        # print(audio_data)
-    else:
-        # Play audio
-        play(audio_segment)
-    finally:
-        DevConfig.REPLYING = False
+    if audio_data:
+        try:
+            audio_segment = AudioSegment.from_file(
+                io.BytesIO(audio_data), format=file_format
+            )
+        except Exception as e:
+            logger.exception(e)
+        else:
+            play(audio_segment)
+    DevConfig.REPLYING = not last
 
 
-def forever_consume_queue(queue, play_queue):
-    while True:
-        comm_stream = queue.get()
-        for msg in comm_stream:
-            start_index = int(len(msg) // 120)
-            end_index = int(len(msg) // 20)
-            play_queue.put(msg[start_index:-end_index])
+def handle_stream(stream, last):
+    if not stream:
+        play_queue.put((b"", last))
+        return
+
+    for msg in stream:
+        # 去掉首尾空白片段
+        start_index = int(len(msg) // 120)
+        end_index = int(len(msg) // 20)
+        play_queue.put((msg[start_index:-end_index], last))
 
 
-def speak_text(text: str):
-    if len(text) == 1:
+def speak_text(text: str, last=False):
+    if len(text) < 1:
+        handle_stream(None, last)
         return
     try:
         g_comm = gTTS(text, lang=LANG)
     except Exception as e:
-        print(e)
+        logger.exception(e)
     else:
-        q.put(g_comm.stream())
+        handle_stream(g_comm.stream(), last)
 
 
-play_queue = queue.Queue()
-tts_worker = threading.Thread(target=forever_consume_queue, args=(q, play_queue))
-tts_worker.daemon = True
-tts_worker.start()
-
-
-player_worker = threading.Thread(target=forever_run, args=(play_queue,))
+player_worker = threading.Thread(target=wait_for_play, args=(play_queue,))
+player_worker.daemon = True
 player_worker.start()
 
 if __name__ == "__main__":

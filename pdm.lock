@@ -96,11 +96,6 @@ requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7
 summary = "Cross-platform colored terminal text."
 
 [[package]]
-name = "comtypes"
-version = "1.1.14"
-summary = "Pure Python COM package"
-
-[[package]]
 name = "decorator"
 version = "5.1.1"
 requires_python = ">=3.5"
@@ -1923,34 +1918,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "pypiwin32"
-version = "223"
-summary = "UNKNOWN"
-dependencies = [
-    "pywin32>=223",
-]
-
-[[package]]
 name = "python-dotenv"
 version = "1.0.0"
 requires_python = ">=3.8"
 summary = "Read key-value pairs from a .env file and set them as environment variables"
-
-[[package]]
-name = "pyttsx3"
-version = "2.90"
-summary = "Text to Speech (TTS) library for Python 2 and 3. Works without internet connection or delay. Supports multiple TTS engines, including Sapi5, nsss, and espeak."
-dependencies = [
-    "comtypes; platform_system == \"Windows\"",
-    "pyobjc>=2.4; platform_system == \"Darwin\"",
-    "pypiwin32; platform_system == \"Windows\"",
-    "pywin32; platform_system == \"Windows\"",
-]
-
-[[package]]
-name = "pywin32"
-version = "305"
-summary = "Python for Window Extensions"
 
 [[package]]
 name = "requests"
@@ -2037,6 +2008,7 @@ dependencies = [
 lock_version = "4.1"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 content_hash = "sha256:de20469668a43f420eaf5126b8d4c191475fd30f386fdf8725f1624360f9e478"
 =======
 content_hash = "sha256:0fb8dab0f1e540cedb47a73ae10fac17832d4ee959fc48ae88754a56d1263471"
@@ -2044,6 +2016,9 @@ content_hash = "sha256:0fb8dab0f1e540cedb47a73ae10fac17832d4ee959fc48ae88754a56d
 =======
 content_hash = "sha256:b9f0e5669736858140bbebba3bd490ffce5d3c81ac59ea380c3fcec15176d701"
 >>>>>>> e0c14b2 (remove touch deps)
+=======
+content_hash = "sha256:9876868254002dd41b26125dc8e734348d6cc5a3c51d65632b02f16a99a06449"
+>>>>>>> 4dbe0cd (refact: refactoring text to speech module)
 
 [metadata.files]
 "aiohttp 3.8.4" = [
@@ -2274,10 +2249,6 @@ content_hash = "sha256:b9f0e5669736858140bbebba3bd490ffce5d3c81ac59ea380c3fcec15
 "colorama 0.4.6" = [
     {url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {url = "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
-]
-"comtypes 1.1.14" = [
-    {url = "https://files.pythonhosted.org/packages/2c/c3/912cf11dab12ef61841242f588692d940ad1068358bff14d322267707d36/comtypes-1.1.14-py2.py3-none-any.whl", hash = "sha256:7cdbe2dc65fe105eea97be04dc50ee3178747bcb64d802d7c0832416d75a87bd"},
-    {url = "https://files.pythonhosted.org/packages/e9/c3/f1b3d86f210e42c3103d4e6c22b9775747d78c337acd3f7f7ab615f5c3e2/comtypes-1.1.14.zip", hash = "sha256:5d7caf6d3a86d51ddfc53e4548cae2dceee1b46672f8bd59679711dd01a934f2"},
 ]
 "decorator 5.1.1" = [
     {url = "https://files.pythonhosted.org/packages/66/0c/8d907af351aa16b42caae42f9d6aa37b900c67308052d10fdce809f8d952/decorator-5.1.1.tar.gz", hash = "sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330"},
@@ -3337,32 +3308,9 @@ content_hash = "sha256:b9f0e5669736858140bbebba3bd490ffce5d3c81ac59ea380c3fcec15
     {url = "https://files.pythonhosted.org/packages/51/0b/2a81b67cade04e50ade902a512ed5bf7400f760753b58a464785c160205f/pyobjc-framework-WebKit-9.0.1.tar.gz", hash = "sha256:82ed0cb273012b48f7489072d6e00579f42d54bc4543471c262db3e5c4bb9e87"},
     {url = "https://files.pythonhosted.org/packages/ca/86/e4f18e471e7d7acd6dc8a0961e2bffc49eca34e905fced1954b670925c2c/pyobjc_framework_WebKit-9.0.1-cp36-abi3-macosx_10_9_universal2.whl", hash = "sha256:037082f72fa1f1d87889fdc172726c3381769de24ca5207d596f3925df9b25f0"},
 ]
-"pypiwin32 223" = [
-    {url = "https://files.pythonhosted.org/packages/13/e8/4f38eb30c4dae36634a53c5b2cd73b517ea3607e10d00f61f2494449cec0/pypiwin32-223.tar.gz", hash = "sha256:71be40c1fbd28594214ecaecb58e7aa8b708eabfa0125c8a109ebd51edbd776a"},
-    {url = "https://files.pythonhosted.org/packages/d0/1b/2f292bbd742e369a100c91faa0483172cd91a1a422a6692055ac920946c5/pypiwin32-223-py3-none-any.whl", hash = "sha256:67adf399debc1d5d14dffc1ab5acacb800da569754fafdc576b2a039485aa775"},
-]
 "python-dotenv 1.0.0" = [
     {url = "https://files.pythonhosted.org/packages/31/06/1ef763af20d0572c032fa22882cfbfb005fba6e7300715a37840858c919e/python-dotenv-1.0.0.tar.gz", hash = "sha256:a8df96034aae6d2d50a4ebe8216326c61c3eb64836776504fcca410e5937a3ba"},
     {url = "https://files.pythonhosted.org/packages/44/2f/62ea1c8b593f4e093cc1a7768f0d46112107e790c3e478532329e434f00b/python_dotenv-1.0.0-py3-none-any.whl", hash = "sha256:f5971a9226b701070a4bf2c38c89e5a3f0d64de8debda981d1db98583009122a"},
-]
-"pyttsx3 2.90" = [
-    {url = "https://files.pythonhosted.org/packages/33/9a/de4781245f5ad966646fd276259ef7cfd400ba3cf7d5db7c0d5aab310c20/pyttsx3-2.90-py3-none-any.whl", hash = "sha256:a585b6d8cffc19bd92db1e0ccbd8aa9c6528dd2baa5a47045d6fed542a44aa19"},
-]
-"pywin32 305" = [
-    {url = "https://files.pythonhosted.org/packages/02/80/23fdb88f8a398dff615f10100cf54871fd8518e3eeea72c1a7d46af01bf9/pywin32-305-cp310-cp310-win_amd64.whl", hash = "sha256:73e819c6bed89f44ff1d690498c0a811948f73777e5f97c494c152b850fad478"},
-    {url = "https://files.pythonhosted.org/packages/05/19/e1f2d772c5437f37c7dbe88be56939de53f040674b6accf2c0369674873d/pywin32-305-cp310-cp310-win_arm64.whl", hash = "sha256:742eb905ce2187133a29365b428e6c3b9001d79accdc30aa8969afba1d8470f4"},
-    {url = "https://files.pythonhosted.org/packages/1e/28/89edde08f43d3c795a7a950368cb3c811f10ae7cc9f1b862f468c3697e8a/pywin32-305-cp39-cp39-win32.whl", hash = "sha256:9d968c677ac4d5cbdaa62fd3014ab241718e619d8e36ef8e11fb930515a1e918"},
-    {url = "https://files.pythonhosted.org/packages/22/da/344b3df042f42d9d775ae2030276b2992adab519c6d682393ddf356775f3/pywin32-305-cp311-cp311-win_amd64.whl", hash = "sha256:326f42ab4cfff56e77e3e595aeaf6c216712bbdd91e464d167c6434b28d65990"},
-    {url = "https://files.pythonhosted.org/packages/29/a9/44913e2b953a63404f992daa7608f8263fe8ac608dd8c717de5be9d53600/pywin32-305-cp37-cp37m-win_amd64.whl", hash = "sha256:109f98980bfb27e78f4df8a51a8198e10b0f347257d1e265bb1a32993d0c973d"},
-    {url = "https://files.pythonhosted.org/packages/2f/02/b7ffa4a3f6b7ddf8f08926fc9312856443ec446259d095ae80bbf5d06add/pywin32-305-cp39-cp39-win_amd64.whl", hash = "sha256:50768c6b7c3f0b38b7fb14dd4104da93ebced5f1a50dc0e834594bff6fbe1271"},
-    {url = "https://files.pythonhosted.org/packages/4b/af/7c7d46af6bf74a92ecaf674fe9f587912bd74a95eddd9304b4e16b37aa8b/pywin32-305-cp36-cp36m-win_amd64.whl", hash = "sha256:13362cc5aa93c2beaf489c9c9017c793722aeb56d3e5166dadd5ef82da021fe1"},
-    {url = "https://files.pythonhosted.org/packages/4b/e0/2b1513208a885267f5acef393eb6346062323751769630c071667c904dde/pywin32-305-cp37-cp37m-win32.whl", hash = "sha256:a55db448124d1c1484df22fa8bbcbc45c64da5e6eae74ab095b9ea62e6d00496"},
-    {url = "https://files.pythonhosted.org/packages/5c/63/ff5e909e6718ccf1b7f5b359b12bed40136c9f5d58b749662a592f4e7aa2/pywin32-305-cp36-cp36m-win32.whl", hash = "sha256:48d8b1659284f3c17b68587af047d110d8c44837736b8932c034091683e05863"},
-    {url = "https://files.pythonhosted.org/packages/65/e4/76dab43949fc3ba9aee8dc0635b299ad09df7813e81aa4adc88e27f463fe/pywin32-305-cp310-cp310-win32.whl", hash = "sha256:421f6cd86e84bbb696d54563c48014b12a23ef95a14e0bdba526be756d89f116"},
-    {url = "https://files.pythonhosted.org/packages/66/e8/0078d6042bf5bce7e2518b32cf1a0c1399a64f91fc280bb1cfda69fcdb35/pywin32-305-cp311-cp311-win32.whl", hash = "sha256:19ca459cd2e66c0e2cc9a09d589f71d827f26d47fe4a9d09175f6aa0256b51c2"},
-    {url = "https://files.pythonhosted.org/packages/6d/37/fb50f89e6f8a420f0f02adbb81cd85de6fd8a4d4c842b721b08bcd533987/pywin32-305-cp38-cp38-win_amd64.whl", hash = "sha256:56d7a9c6e1a6835f521788f53b5af7912090674bb84ef5611663ee1595860fc7"},
-    {url = "https://files.pythonhosted.org/packages/a2/df/cb14fa23ef0782e62df7b33ea2b926150de3b1d71d2713f434582f8a0024/pywin32-305-cp311-cp311-win_arm64.whl", hash = "sha256:4ecd404b2c6eceaca52f8b2e3e91b2187850a1ad3f8b746d0796a98b4cea04db"},
-    {url = "https://files.pythonhosted.org/packages/e3/c9/3ab2df149dc0e0b0ece0513e1650c7e7f26b61b05851853864aa95ff42b9/pywin32-305-cp38-cp38-win32.whl", hash = "sha256:9dd98384da775afa009bc04863426cb30596fd78c6f8e4e2e5bbf4edf8029504"},
 ]
 "requests 2.28.2" = [
     {url = "https://files.pythonhosted.org/packages/9d/ee/391076f5937f0a8cdf5e53b701ffc91753e87b07d66bae4a09aa671897bf/requests-2.28.2.tar.gz", hash = "sha256:98b1b2782e3c6c4904938b84c0eb932721069dfdb9134313beff7c83c2df24bf"},

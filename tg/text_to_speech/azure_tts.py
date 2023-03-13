@@ -6,83 +6,62 @@ import io
 import threading
 import asyncio
 import queue
-from time import time
 import logging
 from tg.config import DevConfig
 
 LANG = DevConfig.AZURE_VOICE_LANG
 logger = logging.getLogger("azure-ttl")
-q = queue.Queue()
 play_queue = queue.Queue()
 
 
-def forever_run(queue):
+def wait_for_play(queue):
     while True:
         sentence, last = queue.get()
         play_audio(sentence, last=last)
 
 
 def play_audio(audio_data: bytes, file_format="mp3", last=False) -> None:
-    """
-    Play audio data.
-
-    Args:
-        audio_data (bytes): Audio data to play.
-        file_format (str): Audio file format, e.g., "mp3", "wav".
-    """
     # Create audio segment from audio data
-    try:
-        audio_segment = AudioSegment.from_file(
-            io.BytesIO(audio_data), format=file_format
-        )
-    except Exception as e:
-        pass
-        # print(audio_data)
-    else:
-        # Play audio
-        play(audio_segment)
-    if last:
-        DevConfig.REPLYING = False
-
-
-async def forever_consume_queue(queue, play_queue):
-    while True:
-        comm_stream, last = queue.get()
-        if comm_stream is None:
-            play_queue.put((b"", last))
-            continue
-        sentence_bytes: List[bytes] = []
-        async for msg in comm_stream:
-            match msg["type"]:
-                case "audio":
-                    if data := msg["data"]:
-                        sentence_bytes.append(data)
-                case _:
-                    pass
-        if len(sentence_bytes) > 10:
-            play_queue.put((b"".join(sentence_bytes[1:-5]), last))
+    if audio_data:
+        try:
+            audio_segment = AudioSegment.from_file(
+                io.BytesIO(audio_data), format=file_format
+            )
+        except Exception as e:
+            logger.exception(e)
         else:
-            play_queue.put((b"".join(sentence_bytes), last))
+            play(audio_segment)
+    DevConfig.REPLYING = not last
 
 
-def forever_consume(q, play_q):
-    asyncio.run(forever_consume_queue(q, play_q))
+async def handle_stream(stream, last):
+    if not stream:
+        play_queue.put((b"", last))
+        return
+    sentence_bytes: List[bytes] = []
+    async for msg in stream:
+        match msg["type"]:
+            case "audio":
+                if data := msg["data"]:
+                    sentence_bytes.append(data)
+            case _:
+                pass
+    # 去掉 tts 返回的录音片段里首尾包含的空白片段
+    if (ed := len(sentence_bytes)) > 10:
+        ed = -5
+    play_queue.put((b"".join(sentence_bytes[1:ed]), last))
 
 
 def speak_text(text: str, last=False):
-    if not text:
-        q.put((None, last))
-        return
-    communicate = edge_tts.Communicate(text, LANG)
-    q.put((communicate.stream(), last))
+    match (text, last):
+        case ("", True):
+            stream = None
+        case _:
+            stream = edge_tts.Communicate(text, LANG).stream()
+    asyncio.run(handle_stream(stream, last))
 
 
-tts_worker = threading.Thread(target=forever_consume, args=(q, play_queue))
-tts_worker.daemon = True
-tts_worker.start()
-
-
-player_worker = threading.Thread(target=forever_run, args=(play_queue,))
+player_worker = threading.Thread(target=wait_for_play, args=(play_queue,))
 player_worker.daemon = True
 player_worker.start()
 

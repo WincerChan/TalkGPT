@@ -17,8 +17,8 @@ _load_env()
 class DevConfig:
     API_KEY = os.environ.get("API_KEY")
     AZURE_VOICE_LANG: str = "zh-CN-YunxiNeural"
-    GOOGLE_VOICE_LANG: str = "en"
-    TTS_CHOICE: str = "EDGE"  # "GOOGLE", "SYSTEM"
+    GOOGLE_VOICE_LANG: str = "zh"
+    TTS_CHOICE: str = "EDGE"  # "EDGE", "GOOGLE"
     REPLYING: bool = False
     DEVICE_NAME: str = "Built-in Input"
 
