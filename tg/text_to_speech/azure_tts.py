@@ -16,11 +16,11 @@ q = queue.Queue()
 
 def forever_run(queue):
     while True:
-        sentence: bytes = queue.get()
-        play_audio(sentence)
+        sentence, last = queue.get()
+        play_audio(sentence, last=last)
 
 
-def play_audio(audio_data: bytes, file_format="mp3") -> None:
+def play_audio(audio_data: bytes, file_format="mp3", last=False) -> None:
     """
     Play audio data.
 
@@ -39,12 +39,13 @@ def play_audio(audio_data: bytes, file_format="mp3") -> None:
     else:
         # Play audio
         play(audio_segment)
+    if last:
+        DevConfig.REPLYING = False
 
 
 async def forever_consume_queue(queue, play_queue):
-    print("in forever consume")
     while True:
-        comm_stream = queue.get()
+        comm_stream, last = queue.get()
         sentence_bytes: List[bytes] = []
         t = time()
         async for msg in comm_stream:
@@ -55,18 +56,18 @@ async def forever_consume_queue(queue, play_queue):
                 case _:
                     pass
         if len(sentence_bytes) > 10:
-            play_queue.put(b"".join(sentence_bytes[1:-5]))
+            play_queue.put((b"".join(sentence_bytes[1:-5]), last))
         else:
-            play_queue.put(b"".join(sentence_bytes))
+            play_queue.put((b"".join(sentence_bytes), last))
 
 
 def forever_consume(q, play_q):
     asyncio.run(forever_consume_queue(q, play_q))
 
 
-def speak_text(text: str):
+def speak_text(text: str, last=False):
     communicate = edge_tts.Communicate(text, LANG)
-    q.put(communicate.stream())
+    q.put((communicate.stream(), last))
 
 
 play_queue = queue.Queue()

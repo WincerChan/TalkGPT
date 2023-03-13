@@ -8,14 +8,15 @@ from .utils import contains_delimiter
 openai.api_key = DevConfig.API_KEY
 
 
-def to_speak(words):
-    speak_text("".join(words))
+def to_speak(words, last=False):
+    speak_text("".join(words), last=last)
     print("".join(words))
 
 
 def ask(text):
+    DevConfig.REPLYING = True
     messages = [
-        {"role": "system", "content": "in concise language"},
+        {"role": "system", "content": "说话简洁"},
         {"role": "user", "content": text},
     ]
     stream = openai.ChatCompletion.create(
@@ -35,4 +36,14 @@ def ask(text):
         if content is None:
             continue
         sentences.append(content)
-    to_speak(sentences)
+    to_speak(sentences, last=True)
+    while True:
+        time.sleep(0.1)
+        if DevConfig.REPLYING is False:
+            break
+
+
+if __name__ == "__main__":
+    while True:
+        text = input("Question: ")
+        ask(text)

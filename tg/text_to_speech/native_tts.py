@@ -2,6 +2,7 @@ from subprocess import call
 import threading
 import sys, os
 import queue
+from tg.config import DevConfig
 
 msg_queue = queue.Queue()
 
@@ -12,12 +13,14 @@ currenct_dir = os.path.dirname(current_file_path)
 
 def forever_consume_queue(queue):
     while True:
-        text = queue.get()
+        text, last = queue.get()
         call([sys.executable, os.path.join(currenct_dir, "_pyttsx.py"), text])
+        if last:
+            DevConfig.REPLYING = False
 
 
-def speak_text(text: str):
-    msg_queue.put(text)
+def speak_text(text: str, last=False):
+    msg_queue.put((text, last))
 
 
 tts_worker = threading.Thread(target=forever_consume_queue, args=(msg_queue,))

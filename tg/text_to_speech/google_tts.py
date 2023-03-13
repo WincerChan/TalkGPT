@@ -36,6 +36,8 @@ def play_audio(audio_data: bytes, file_format="mp3") -> None:
     else:
         # Play audio
         play(audio_segment)
+    finally:
+        DevConfig.REPLYING = False
 
 
 def forever_consume_queue(queue, play_queue):
