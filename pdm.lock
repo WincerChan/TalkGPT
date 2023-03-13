@@ -1971,6 +1971,26 @@ requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 summary = "Python 2 and 3 compatibility utilities"
 
 [[package]]
+<<<<<<< HEAD
+=======
+name = "sounddevice"
+version = "0.4.6"
+requires_python = ">=3.7"
+summary = "Play and Record Sound with Python"
+dependencies = [
+    "CFFI>=1.0",
+]
+
+[[package]]
+name = "speechrecognition"
+version = "3.9.0"
+summary = "Library for performing speech recognition, with support for several engines and APIs, online and offline."
+dependencies = [
+    "requests>=2.26.0",
+]
+
+[[package]]
+>>>>>>> dd9b529 (update pdm lock)
 name = "stack-data"
 version = "0.6.2"
 summary = "Extract data from python stack frames and tracebacks for informative displays"
@@ -2018,7 +2038,11 @@ dependencies = [
 
 [metadata]
 lock_version = "4.1"
+<<<<<<< HEAD
 content_hash = "sha256:de20469668a43f420eaf5126b8d4c191475fd30f386fdf8725f1624360f9e478"
+=======
+content_hash = "sha256:0fb8dab0f1e540cedb47a73ae10fac17832d4ee959fc48ae88754a56d1263471"
+>>>>>>> dd9b529 (update pdm lock)
 
 [metadata.files]
 "aiohttp 3.8.4" = [
@@ -3347,6 +3371,20 @@ content_hash = "sha256:de20469668a43f420eaf5126b8d4c191475fd30f386fdf8725f162436
     {url = "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
     {url = "https://files.pythonhosted.org/packages/d9/5a/e7c31adbe875f2abbb91bd84cf2dc52d792b5a01506781dbcf25c91daf11/six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
 ]
+<<<<<<< HEAD
+=======
+"sounddevice 0.4.6" = [
+    {url = "https://files.pythonhosted.org/packages/24/5a/c0b9066fcaf783054b3f35254938dcba2d8cf02576ebdc56b6b4e85661f2/sounddevice-0.4.6-py3-none-macosx_10_6_x86_64.macosx_10_6_universal2.whl", hash = "sha256:8b0b806c205dd3e3cd5a97262b2482624fd21db7d47083b887090148a08051c8"},
+    {url = "https://files.pythonhosted.org/packages/39/ae/5e84220bfca4256e4ca2a62a174636089ab6ff671b5f9ddd7e8238587acd/sounddevice-0.4.6-py3-none-win_amd64.whl", hash = "sha256:7830d4f8f8570f2e5552942f81d96999c5fcd9a0b682d6fc5d5c5529df23be2c"},
+    {url = "https://files.pythonhosted.org/packages/71/26/e59b2cec54f6b85627dca67032b82bb24012a1b45bc7904e459c3e2bfd14/sounddevice-0.4.6-py3-none-win32.whl", hash = "sha256:e3ba6e674ffa8f79a591d744a1d4ab922fe5bdfd4faf8b25069a08e051010b7b"},
+    {url = "https://files.pythonhosted.org/packages/d7/d5/f0a0aba169f23657c7af3f0c878db7413a9a3b113026fc759862a697c611/sounddevice-0.4.6-py3-none-any.whl", hash = "sha256:5de768ba6fe56ad2b5aaa2eea794b76b73e427961c95acad2ee2ed7f866a4b20"},
+    {url = "https://files.pythonhosted.org/packages/d8/3b/c989bde59a1eb333eb2a692f508a09408df562a3f99047a2d030e160cb11/sounddevice-0.4.6.tar.gz", hash = "sha256:3236b78f15f0415bdf006a620cef073d0c0522851d66f4a961ed6d8eb1482fe9"},
+]
+"speechrecognition 3.9.0" = [
+    {url = "https://files.pythonhosted.org/packages/88/54/82f70dd84a89ce66b8431338a14fc8580e825e39ca5d79775859f2bcf895/SpeechRecognition-3.9.0-py2.py3-none-any.whl", hash = "sha256:6da44facb564b3f2bcee96a2bf876b89a14f61afdee1e7fb12815e58211fd329"},
+    {url = "https://files.pythonhosted.org/packages/d8/57/94f562bb990851f948edb063ea01be33506bf513270409a36661a68035b1/SpeechRecognition-3.9.0.tar.gz", hash = "sha256:a2f992acda6314a3fa574bf84c2e075ce75f2b4c143b4435d7cbc98f66565ee7"},
+]
+>>>>>>> dd9b529 (update pdm lock)
 "stack-data 0.6.2" = [
     {url = "https://files.pythonhosted.org/packages/6a/81/aa96c25c27f78cdc444fec27d80f4c05194c591465e491a1358d8a035bc1/stack_data-0.6.2-py3-none-any.whl", hash = "sha256:cbb2a53eb64e5785878201a97ed7c7b94883f48b87bfb0bbe8b623c74679e4a8"},
     {url = "https://files.pythonhosted.org/packages/db/18/aa7f2b111aeba2cd83503254d9133a912d7f61f459a0c8561858f0d72a56/stack_data-0.6.2.tar.gz", hash = "sha256:32d2dd0376772d01b6cb9fc996f3c8b57a357089dec328ed4b6553d037eaf815"},
