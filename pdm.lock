@@ -66,6 +66,7 @@ dependencies = [
     "packaging>=22.0",
     "pathspec>=0.9.0",
     "platformdirs>=2",
+    "tomli>=1.1.0; python_version < \"3.11\"",
 ]
 
 [[package]]
@@ -120,6 +121,16 @@ name = "frozenlist"
 version = "1.3.3"
 requires_python = ">=3.7"
 summary = "A list-like structure which implements collections.abc.MutableSequence"
+
+[[package]]
+name = "gtts"
+version = "2.3.1"
+requires_python = ">=3.7"
+summary = "gTTS (Google Text-to-Speech), a Python library and CLI tool to interface with Google Translate text-to-speech API"
+dependencies = [
+    "click<8.2,>=7.1",
+    "requests<3,>=2.27",
+]
 
 [[package]]
 name = "idna"
@@ -179,7 +190,7 @@ summary = "Type system extensions for programs checked with the mypy type checke
 
 [[package]]
 name = "openai"
-version = "0.27.1"
+version = "0.27.2"
 requires_python = ">=3.7.1"
 summary = "Python client library for the OpenAI API"
 dependencies = [
@@ -221,7 +232,7 @@ summary = "Tiny 'shelve'-like database with concurrency support"
 
 [[package]]
 name = "platformdirs"
-version = "3.1.0"
+version = "3.1.1"
 requires_python = ">=3.7"
 summary = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 
@@ -1942,17 +1953,9 @@ requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 summary = "Python 2 and 3 compatibility utilities"
 
 [[package]]
-name = "sounddevice"
-version = "0.4.6"
-requires_python = ">=3.7"
-summary = "Play and Record Sound with Python"
-dependencies = [
-    "CFFI>=1.0",
-]
-
-[[package]]
 name = "speechrecognition"
-version = "3.9.0"
+version = "3.10.0"
+requires_python = ">=3.8"
 summary = "Library for performing speech recognition, with support for several engines and APIs, online and offline."
 dependencies = [
     "requests>=2.26.0",
@@ -1967,6 +1970,12 @@ dependencies = [
     "executing>=1.2.0",
     "pure-eval",
 ]
+
+[[package]]
+name = "tomli"
+version = "2.0.1"
+requires_python = ">=3.7"
+summary = "A lil' TOML parser"
 
 [[package]]
 name = "tqdm"
@@ -1985,7 +1994,7 @@ summary = "Traitlets Python configuration system"
 
 [[package]]
 name = "urllib3"
-version = "1.26.14"
+version = "1.26.15"
 requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 summary = "HTTP library with thread-safe connection pooling, file post, and more."
 
@@ -2006,19 +2015,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.1"
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-content_hash = "sha256:de20469668a43f420eaf5126b8d4c191475fd30f386fdf8725f1624360f9e478"
-=======
-content_hash = "sha256:0fb8dab0f1e540cedb47a73ae10fac17832d4ee959fc48ae88754a56d1263471"
->>>>>>> dd9b529 (update pdm lock)
-=======
-content_hash = "sha256:b9f0e5669736858140bbebba3bd490ffce5d3c81ac59ea380c3fcec15176d701"
->>>>>>> e0c14b2 (remove touch deps)
-=======
-content_hash = "sha256:9876868254002dd41b26125dc8e734348d6cc5a3c51d65632b02f16a99a06449"
->>>>>>> 4dbe0cd (refact: refactoring text to speech module)
+content_hash = "sha256:47392ce51f21fe3df066b1fed551410cfb5d92f7b2ad7b7f1885e95ced750b83"
 
 [metadata.files]
 "aiohttp 3.8.4" = [
@@ -2338,6 +2335,10 @@ content_hash = "sha256:9876868254002dd41b26125dc8e734348d6cc5a3c51d65632b02f16a9
     {url = "https://files.pythonhosted.org/packages/fa/a1/d0822eb2f827f209c8fcf19ff1c9eb30ae08e25b710cf432b1013ea23429/frozenlist-1.3.3-cp311-cp311-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:9309869032abb23d196cb4e4db574232abe8b8be1339026f489eeb34a4acfd91"},
     {url = "https://files.pythonhosted.org/packages/fd/b8/9ed4ed37b2c3269660a86a10a09b2fe49dbbd6973ac684804ece7b51b63f/frozenlist-1.3.3-cp310-cp310-musllinux_1_1_aarch64.whl", hash = "sha256:924620eef691990dfb56dc4709f280f40baee568c794b5c1885800c3ecc69816"},
 ]
+"gtts 2.3.1" = [
+    {url = "https://files.pythonhosted.org/packages/15/19/de0104831fa713937719ced2fd628f1e5109e842cc4c1ef8e478896ebca6/gTTS-2.3.1-py3-none-any.whl", hash = "sha256:7123ba91d415340f3264266adc195ff69f89b07f97ddafcfe48c9dad66f005c8"},
+    {url = "https://files.pythonhosted.org/packages/51/5e/2797084ceb722791528c59ef88edeb6c0fdc5f58a81d0dbe80cf2fb9cccb/gTTS-2.3.1.tar.gz", hash = "sha256:fad26bccf0408aa8373ca8323f10731dc5b0c59eb5a0617591efe47ff30d4fcb"},
+]
 "idna 3.4" = [
     {url = "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
     {url = "https://files.pythonhosted.org/packages/fc/34/3030de6f1370931b9dbb4dad48f6ab1015ab1d32447850b9fc94e60097be/idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
@@ -2434,8 +2435,9 @@ content_hash = "sha256:9876868254002dd41b26125dc8e734348d6cc5a3c51d65632b02f16a9
     {url = "https://files.pythonhosted.org/packages/2a/e2/5d3f6ada4297caebe1a2add3b126fe800c96f56dbe5d1988a2cbe0b267aa/mypy_extensions-1.0.0-py3-none-any.whl", hash = "sha256:4392f6c0eb8a5668a69e23d168ffa70f0be9ccfd32b5cc2d26a34ae5b844552d"},
     {url = "https://files.pythonhosted.org/packages/98/a4/1ab47638b92648243faf97a5aeb6ea83059cc3624972ab6b8d2316078d3f/mypy_extensions-1.0.0.tar.gz", hash = "sha256:75dbf8955dc00442a438fc4d0666508a9a97b6bd41aa2f0ffe9d2f2725af0782"},
 ]
-"openai 0.27.1" = [
-    {url = "https://files.pythonhosted.org/packages/6f/ce/72dfdb5adf3fd8849706a9b683ac6247f1bb72229178cc4c2c3f06b4890d/openai-0.27.1.tar.gz", hash = "sha256:11a8eb9b609653295be6cc67febecd5189f17b22ef015462c5003d8959567fd7"},
+"openai 0.27.2" = [
+    {url = "https://files.pythonhosted.org/packages/47/21/d909d8e92d1867f3daeb8d5c40936e3d37e27ad1ae187c754fefeadcbd4f/openai-0.27.2-py3-none-any.whl", hash = "sha256:6df674cf257e9e0504f1fd191c333d3f6a2442b13218d0eccf06230eb24d320e"},
+    {url = "https://files.pythonhosted.org/packages/a9/94/3d4755c8126eeb4b3469d8b9aff5600085f6d7de691da1ac04c79c24dc48/openai-0.27.2.tar.gz", hash = "sha256:5869fdfa34b0ec66c39afa22f4a0fb83a135dff81f6505f52834c6ab3113f762"},
 ]
 "packaging 23.0" = [
     {url = "https://files.pythonhosted.org/packages/47/d5/aca8ff6f49aa5565df1c826e7bf5e85a6df852ee063600c1efa5b932968c/packaging-23.0.tar.gz", hash = "sha256:b6ad297f8907de0fa2fe1ccbd26fdaf387f5f47c7275fedf8cce89f99446cf97"},
@@ -2457,9 +2459,9 @@ content_hash = "sha256:9876868254002dd41b26125dc8e734348d6cc5a3c51d65632b02f16a9
     {url = "https://files.pythonhosted.org/packages/9a/41/220f49aaea88bc6fa6cba8d05ecf24676326156c23b991e80b3f2fc24c77/pickleshare-0.7.5-py2.py3-none-any.whl", hash = "sha256:9649af414d74d4df115d5d718f82acb59c9d418196b7b4290ed47a12ce62df56"},
     {url = "https://files.pythonhosted.org/packages/d8/b6/df3c1c9b616e9c0edbc4fbab6ddd09df9535849c64ba51fcb6531c32d4d8/pickleshare-0.7.5.tar.gz", hash = "sha256:87683d47965c1da65cdacaf31c8441d12b8044cdec9aca500cd78fc2c683afca"},
 ]
-"platformdirs 3.1.0" = [
-    {url = "https://files.pythonhosted.org/packages/8f/5f/01180534cebac14f3a792bf2f74fc99d34531c950c308fdebd9721e85550/platformdirs-3.1.0.tar.gz", hash = "sha256:accc3665857288317f32c7bebb5a8e482ba717b474f3fc1d18ca7f9214be0cef"},
-    {url = "https://files.pythonhosted.org/packages/ca/de/a33823fe54d52ea72fdae011115d737a2642d441c93b68ed17455a328e4c/platformdirs-3.1.0-py3-none-any.whl", hash = "sha256:13b08a53ed71021350c9e300d4ea8668438fb0046ab3937ac9a29913a1a1350a"},
+"platformdirs 3.1.1" = [
+    {url = "https://files.pythonhosted.org/packages/79/c4/f98a05535344f79699bbd494e56ac9efc986b7a253fe9f4dba7414a7f505/platformdirs-3.1.1.tar.gz", hash = "sha256:024996549ee88ec1a9aa99ff7f8fc819bb59e2c3477b410d90a16d32d6e707aa"},
+    {url = "https://files.pythonhosted.org/packages/7b/e1/593f693096c50411a2bf9571f66bc3be9d0f79a4a50e95aab581458b0e3c/platformdirs-3.1.1-py3-none-any.whl", hash = "sha256:e5986afb596e4bb5bde29a79ac9061aa955b94fca2399b7aaac4090860920dd8"},
 ]
 "prompt-toolkit 3.0.38" = [
     {url = "https://files.pythonhosted.org/packages/4b/bb/75cdcd356f57d17b295aba121494c2333d26bfff1a837e6199b8b83c415a/prompt_toolkit-3.0.38.tar.gz", hash = "sha256:23ac5d50538a9a38c8bde05fecb47d0b403ecd0662857a86f886f798563d5b9b"},
@@ -3320,23 +3322,17 @@ content_hash = "sha256:9876868254002dd41b26125dc8e734348d6cc5a3c51d65632b02f16a9
     {url = "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
     {url = "https://files.pythonhosted.org/packages/d9/5a/e7c31adbe875f2abbb91bd84cf2dc52d792b5a01506781dbcf25c91daf11/six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
 ]
-<<<<<<< HEAD
-=======
-"sounddevice 0.4.6" = [
-    {url = "https://files.pythonhosted.org/packages/24/5a/c0b9066fcaf783054b3f35254938dcba2d8cf02576ebdc56b6b4e85661f2/sounddevice-0.4.6-py3-none-macosx_10_6_x86_64.macosx_10_6_universal2.whl", hash = "sha256:8b0b806c205dd3e3cd5a97262b2482624fd21db7d47083b887090148a08051c8"},
-    {url = "https://files.pythonhosted.org/packages/39/ae/5e84220bfca4256e4ca2a62a174636089ab6ff671b5f9ddd7e8238587acd/sounddevice-0.4.6-py3-none-win_amd64.whl", hash = "sha256:7830d4f8f8570f2e5552942f81d96999c5fcd9a0b682d6fc5d5c5529df23be2c"},
-    {url = "https://files.pythonhosted.org/packages/71/26/e59b2cec54f6b85627dca67032b82bb24012a1b45bc7904e459c3e2bfd14/sounddevice-0.4.6-py3-none-win32.whl", hash = "sha256:e3ba6e674ffa8f79a591d744a1d4ab922fe5bdfd4faf8b25069a08e051010b7b"},
-    {url = "https://files.pythonhosted.org/packages/d7/d5/f0a0aba169f23657c7af3f0c878db7413a9a3b113026fc759862a697c611/sounddevice-0.4.6-py3-none-any.whl", hash = "sha256:5de768ba6fe56ad2b5aaa2eea794b76b73e427961c95acad2ee2ed7f866a4b20"},
-    {url = "https://files.pythonhosted.org/packages/d8/3b/c989bde59a1eb333eb2a692f508a09408df562a3f99047a2d030e160cb11/sounddevice-0.4.6.tar.gz", hash = "sha256:3236b78f15f0415bdf006a620cef073d0c0522851d66f4a961ed6d8eb1482fe9"},
+"speechrecognition 3.10.0" = [
+    {url = "https://files.pythonhosted.org/packages/1f/11/843b42cb0a75b1f654b2d49f894a692ce78677ccf4a1272f7cf69bdf2c76/SpeechRecognition-3.10.0-py2.py3-none-any.whl", hash = "sha256:7ae9966887d9909ce3e5a0c27ecc3eacfca16fd0c0829f77f552919418e86306"},
+    {url = "https://files.pythonhosted.org/packages/50/65/1307adaf5f29d850fc0925251f71bb5aa3d030043ac8a373e7ae6982bf29/SpeechRecognition-3.10.0.tar.gz", hash = "sha256:14131155e8a8ba00ead1b7b9b1a2fa71c845e4db5f9a5f66a33a1bd6c55c6c35"},
 ]
-"speechrecognition 3.9.0" = [
-    {url = "https://files.pythonhosted.org/packages/88/54/82f70dd84a89ce66b8431338a14fc8580e825e39ca5d79775859f2bcf895/SpeechRecognition-3.9.0-py2.py3-none-any.whl", hash = "sha256:6da44facb564b3f2bcee96a2bf876b89a14f61afdee1e7fb12815e58211fd329"},
-    {url = "https://files.pythonhosted.org/packages/d8/57/94f562bb990851f948edb063ea01be33506bf513270409a36661a68035b1/SpeechRecognition-3.9.0.tar.gz", hash = "sha256:a2f992acda6314a3fa574bf84c2e075ce75f2b4c143b4435d7cbc98f66565ee7"},
-]
->>>>>>> dd9b529 (update pdm lock)
 "stack-data 0.6.2" = [
     {url = "https://files.pythonhosted.org/packages/6a/81/aa96c25c27f78cdc444fec27d80f4c05194c591465e491a1358d8a035bc1/stack_data-0.6.2-py3-none-any.whl", hash = "sha256:cbb2a53eb64e5785878201a97ed7c7b94883f48b87bfb0bbe8b623c74679e4a8"},
     {url = "https://files.pythonhosted.org/packages/db/18/aa7f2b111aeba2cd83503254d9133a912d7f61f459a0c8561858f0d72a56/stack_data-0.6.2.tar.gz", hash = "sha256:32d2dd0376772d01b6cb9fc996f3c8b57a357089dec328ed4b6553d037eaf815"},
+]
+"tomli 2.0.1" = [
+    {url = "https://files.pythonhosted.org/packages/97/75/10a9ebee3fd790d20926a90a2547f0bf78f371b2f13aa822c759680ca7b9/tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
+    {url = "https://files.pythonhosted.org/packages/c0/3f/d7af728f075fb08564c5949a9c95e44352e23dee646869fa104a3b2060a3/tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]
 "tqdm 4.65.0" = [
     {url = "https://files.pythonhosted.org/packages/3d/78/81191f56abb7d3d56963337dbdff6aa4f55805c8afd8bad64b0a34199e9b/tqdm-4.65.0.tar.gz", hash = "sha256:1871fb68a86b8fb3b59ca4cdd3dcccbc7e6d613eeed31f4c332531977b89beb5"},
@@ -3346,9 +3342,9 @@ content_hash = "sha256:9876868254002dd41b26125dc8e734348d6cc5a3c51d65632b02f16a9
     {url = "https://files.pythonhosted.org/packages/39/c3/205e88f02959712b62008502952707313640369144a7fded4cbc61f48321/traitlets-5.9.0.tar.gz", hash = "sha256:f6cde21a9c68cf756af02035f72d5a723bf607e862e7be33ece505abf4a3bad9"},
     {url = "https://files.pythonhosted.org/packages/77/75/c28e9ef7abec2b7e9ff35aea3e0be6c1aceaf7873c26c95ae1f0d594de71/traitlets-5.9.0-py3-none-any.whl", hash = "sha256:9e6ec080259b9a5940c797d58b613b5e31441c2257b87c2e795c5228ae80d2d8"},
 ]
-"urllib3 1.26.14" = [
-    {url = "https://files.pythonhosted.org/packages/c5/52/fe421fb7364aa738b3506a2d99e4f3a56e079c0a798e9f4fa5e14c60922f/urllib3-1.26.14.tar.gz", hash = "sha256:076907bf8fd355cde77728471316625a4d2f7e713c125f51953bb5b3eecf4f72"},
-    {url = "https://files.pythonhosted.org/packages/fe/ca/466766e20b767ddb9b951202542310cba37ea5f2d792dae7589f1741af58/urllib3-1.26.14-py2.py3-none-any.whl", hash = "sha256:75edcdc2f7d85b137124a6c3c9fc3933cdeaa12ecb9a6a959f22797a0feca7e1"},
+"urllib3 1.26.15" = [
+    {url = "https://files.pythonhosted.org/packages/21/79/6372d8c0d0641b4072889f3ff84f279b738cd8595b64c8e0496d4e848122/urllib3-1.26.15.tar.gz", hash = "sha256:8a388717b9476f934a21484e8c8e61875ab60644d29b9b39e11e4b9dc1c6b305"},
+    {url = "https://files.pythonhosted.org/packages/7b/f5/890a0baca17a61c1f92f72b81d3c31523c99bec609e60c292ea55b387ae8/urllib3-1.26.15-py2.py3-none-any.whl", hash = "sha256:aa751d169e23c7479ce47a0cb0da579e3ede798f994f5816a74e4f4500dcea42"},
 ]
 "wcwidth 0.2.6" = [
     {url = "https://files.pythonhosted.org/packages/20/f4/c0584a25144ce20bfcf1aecd041768b8c762c1eb0aa77502a3f0baa83f11/wcwidth-0.2.6-py2.py3-none-any.whl", hash = "sha256:795b138f6875577cd91bba52baf9e445cd5118fd32723b460e30a0af30ea230e"},

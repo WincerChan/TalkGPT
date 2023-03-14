@@ -1,10 +1,14 @@
-from pocketsphinx import LiveSpeech
 from tg.config import DevConfig
 import speech_recognition as sr
 import logging
 from tg.config import DevConfig
-from .whisper_stt import recognition as whiper_reco
-from .google_stt import recognition as google_reco
+from dotenv import set_key
+
+match DevConfig.STT_CHOICE:
+    case "WHISPER":
+        from .whisper_stt import recognition
+    case _:
+        from .google_stt import recognition
 
 
 logger = logging.getLogger("stt")
@@ -12,30 +16,45 @@ logger = logging.getLogger("stt")
 r = sr.Recognizer()
 
 
+def list_input_device():
+    audio = sr.Microphone.get_pyaudio().PyAudio()
+    for i in range(audio.get_device_count()):
+        device_info = audio.get_device_info_by_index(i)
+        if device_info.get("maxInputChannels") > 0:
+            yield device_info.get("name"), i
+
+
 def select_microphone():
-    if DevConfig.DEVICE_NAME is None:
+    if DevConfig.MIC_DEVICE_INDEX is None:
         print("Your device has many microphones: ")
-    for idx, mic_name in enumerate(sr.Microphone.list_microphone_names()):
-        if DevConfig.DEVICE_NAME is None:
+    device_ids = []
+    for idx, (mic_name, rel_idx) in enumerate(list_input_device()):
+        device_ids.append(rel_idx)
+        if DevConfig.MIC_DEVICE_INDEX is None:
             print(f"\t {idx+1}. {mic_name}")
             continue
-        if DevConfig.DEVICE_NAME == mic_name:
-            print(f"Your choose {DevConfig.DEVICE_NAME} as microphone.")
-            device_index = idx
-    if DevConfig.DEVICE_NAME is None:
-        device_index = int(input("Please choose one: ")) - 1
+        if DevConfig.MIC_DEVICE_INDEX == rel_idx:
+            print(f"Your choose {mic_name} as microphone.")
+            device_index = rel_idx
+    if DevConfig.MIC_DEVICE_INDEX is None:
+        device_index = device_ids[int(input("Please choose one: ")) - 1]
+        set_key(".env", "MIC_DEVICE_INDEX", f"{device_index}")
     return sr.Microphone(device_index=device_index)
 
 
 def listen(mic):
     while True:
-        print("Listening...")
-        with mic as source:
-            audio = r.listen(source)
+        print("\nRecording, please speak...")
+        try:
+            with mic as source:
+                audio = r.listen(source, phrase_time_limit=DevConfig.MAX_WAIT_SECONDS)
+        except sr.exceptions.WaitTimeoutError:
+            input(
+                f"No sound detected within {DevConfig.MAX_WAIT_SECONDS} seconds, enter hibernation mode, press [Enter] to wake up."
+            )
+            continue
+        else:
+            print("Recording finished, processing...")
         if DevConfig.REPLYING:
             continue
-        match DevConfig.STT_CHOICE:
-            case "WHISPER":
-                yield whiper_reco(audio.get_wav_data())
-            case _:
-                yield google_reco(audio, DevConfig.GOOGLE_INPUT_LANG)
+        yield recognition(audio)
