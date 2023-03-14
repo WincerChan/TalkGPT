@@ -24,7 +24,7 @@ class DevConfig:
     TTS_CHOICE: str = "EDGE"  # "EDGE", "GOOGLE"
 
     # stt 相关
-    MIC_DEVICE_INDEX: str = int(os.environ.get("MIC_DEVICE_INDEX"))
+    MIC_DEVICE_INDEX = os.environ.get("MIC_DEVICE_INDEX")
     MAX_WAIT_SECONDS = 5
     # stt 选择 google 的时候，需要设置语言；选择 whisper 的话不用
     GOOGLE_INPUT_LANG = "zh-CN"

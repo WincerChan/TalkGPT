@@ -33,7 +33,7 @@ def select_microphone():
         if DevConfig.MIC_DEVICE_INDEX is None:
             print(f"\t {idx+1}. {mic_name}")
             continue
-        if DevConfig.MIC_DEVICE_INDEX == rel_idx:
+        if DevConfig.MIC_DEVICE_INDEX == f"{rel_idx}":
             print(f"Your choose {mic_name} as microphone.")
             device_index = rel_idx
     if DevConfig.MIC_DEVICE_INDEX is None:
