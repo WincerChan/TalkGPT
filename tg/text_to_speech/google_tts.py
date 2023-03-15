@@ -16,10 +16,10 @@ logger = logging.getLogger("google-tts")
 def wait_for_play(queue):
     while True:
         sentence, last = queue.get()
-        play_audio(sentence, last=last)
+        play_audio(sentence, is_latis_last
 
 
-def play_audio(audio_data: bytes, file_format="mp3", last=False) -> None:
+def play_audio(audio_data: bytes, file_format="mp3", is_latFalse) -> None:
     # Create audio segment from audio data
     if audio_data:
         try:
@@ -33,28 +33,28 @@ def play_audio(audio_data: bytes, file_format="mp3", last=False) -> None:
     DevConfig.REPLYING = not last
 
 
-def handle_stream(stream, last):
+def handle_stream(stream, is_last:
     if not stream:
-        play_queue.put((b"", last))
+        play_queue.put((b"", is_last)
         return
 
     for msg in stream:
         # 去掉首尾空白片段
         start_index = int(len(msg) // 120)
         end_index = int(len(msg) // 20)
-        play_queue.put((msg[start_index:-end_index], last))
+        play_queue.put((msg[start_index:-end_index], is_last)
 
 
-def speak_text(text: str, last=False):
+def speak_text(text: str, is_latFalse):
     if len(text) < 1:
-        handle_stream(None, last)
+        handle_stream(None, is_last
         return
     try:
         g_comm = gTTS(text, lang=LANG)
     except Exception as e:
         logger.exception(e)
     else:
-        handle_stream(g_comm.stream(), last)
+        handle_stream(g_comm.stream(), is_last
 
 
 player_worker = threading.Thread(target=wait_for_play, args=(play_queue,))

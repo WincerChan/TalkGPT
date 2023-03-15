@@ -12,11 +12,15 @@ PREVIOUS_CONVERSATIONS = CircularConversation(DevConfig.PREVIOUS_MESSAGES_COUNT 
 logger = logging.getLogger("chatgpt")
 
 
-def to_speak(words, last=False):
+def _words_to_sentence(words):
     sentence = "".join(words).replace("\n\n", "\n")
-
     print(sentence, end="", flush=True)
-    speak_text(sentence, last=last)
+    return sentence
+
+
+def words_to_speek(words):
+    sentence = _words_to_sentence(words)
+    speak_text(sentence)
     return sentence
 
 
@@ -32,24 +36,27 @@ def build_conversation_context(text):
 
 
 def build_sentence_from_stream(stream) -> str:
-    reply = ""
-    words = []
-    print("Reply: ", end="")
+    reply, words = [], []
     for word in stream:
         best_choice = word["choices"][0]
-        content = best_choice.get("delta").get("content")
-        if content is None:
-            continue
 
-        words.append(content)
+        content: str
+        if content := best_choice["delta"].get("content"):
+            words.append(content.replace("\n", "", 1))
 
-        if contains_delimiter(content) and len(words) > 10:
-            reply += to_speak(words)
+        reply_finished = best_choice["finish_reason"] == "stop"
+
+        is_complete_sentence = contains_delimiter(content) and len(words) > 10
+
+        if is_complete_sentence or reply_finished:
+            reply.append(words_to_speek(words))
             words.clear()
+    else:
+        reply.append(words_to_speek(words))
 
-    reply += to_speak(words, last=True)
-    print("\n")
-    return reply
+    speak_text("<END>")
+
+    return "".join(reply)
 
 
 def save_reply(raw_reply):
@@ -66,6 +73,7 @@ def ask(text):
         temperature=0,
         stream=True,
     )
+    print("Reply: ", end="")
     reply = build_sentence_from_stream(stream)
     # save reply
     if DevConfig.PREVIOUS_MESSAGES_SAVE_REPLY:

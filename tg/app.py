@@ -9,7 +9,7 @@ def run():
     for x in listen(mic):
         if not x:
             continue
-        print(f"Ask: {x}")
+        print(f"\nAsk: {x}")
         ask(x)
 
 

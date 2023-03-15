@@ -11,17 +11,16 @@ from tg.config import DevConfig
 
 LANG = DevConfig.AZURE_VOICE_LANG
 logger = logging.getLogger("azure-ttl")
-play_queue = queue.Queue()
+playback_queue = queue.Queue()
 
 
-def wait_for_play(queue):
+def monitor_playback_queue(queue):
     while True:
-        sentence, last = queue.get()
-        play_audio(sentence, last=last)
+        audio_data, is_last = queue.get()
+        play_audio_segment(audio_data, is_last=is_last)
 
 
-def play_audio(audio_data: bytes, file_format="mp3", last=False) -> None:
-    # Create audio segment from audio data
+def play_audio_segment(audio_data: bytes, file_format="mp3", is_last=False) -> None:
     if audio_data:
         try:
             audio_segment = AudioSegment.from_file(
@@ -31,41 +30,45 @@ def play_audio(audio_data: bytes, file_format="mp3", last=False) -> None:
             logger.exception(e)
         else:
             play(audio_segment)
-    DevConfig.REPLYING = not last
+    DevConfig.REPLYING = not is_last
 
 
-async def handle_stream(stream, last):
+async def process_audio_stream(stream, is_last):
     if not stream:
-        play_queue.put((b"", last))
+        playback_queue.put((b"", is_last))
         return
-    sentence_bytes: List[bytes] = []
+
+    audio_bytes: List[bytes] = []
+
     async for msg in stream:
-        match msg["type"]:
-            case "audio":
-                if data := msg["data"]:
-                    sentence_bytes.append(data)
-            case _:
-                pass
-    # 去掉 tts 返回的录音片段里首尾包含的空白片段
-    if (ed := len(sentence_bytes)) > 10:
-        ed = -5
-    play_queue.put((b"".join(sentence_bytes[1:ed]), last))
+        if msg["type"] == "audio" and (data := msg["data"]):
+            audio_bytes.append(data)
+
+    if len(audio_bytes) > 10:
+        audio_bytes = audio_bytes[1:-5]
+
+    playback_queue.put((b"".join(audio_bytes), is_last))
 
 
-def speak_text(text: str, last=False):
-    match (text, last):
+def synthesize_speech_from_text(text: str):
+    end_marker = "<END>"
+    if text == "<END>":
+        DevConfig.REPLYING = False
+        return
+
+    match (text, True):
         case ("", True):
             stream = None
         case _:
             stream = edge_tts.Communicate(text, LANG).stream()
-    asyncio.run(handle_stream(stream, last))
+    asyncio.run(process_audio_stream(stream, False))
 
 
-player_worker = threading.Thread(target=wait_for_play, args=(play_queue,))
-player_worker.daemon = True
-player_worker.start()
+player_thread = threading.Thread(target=monitor_playback_queue, args=(playback_queue,))
+player_thread.daemon = True
+player_thread.start()
 
 if __name__ == "__main__":
     while True:
         text = input("Question:")
-        speak_text(text)
+        synthesize_speech_from_text(text)
