@@ -64,17 +64,21 @@ def save_reply(raw_reply):
     PREVIOUS_CONVERSATIONS.push_reply(reply)
 
 
-def ask(text):
-    DevConfig.REPLYING = True
-    messages = build_conversation_context(text)
+def build_reply(messages):
     stream = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=messages,
         temperature=0,
         stream=True,
     )
+    return build_sentence_from_stream(stream)
+
+
+def ask(text):
+    DevConfig.REPLYING = True
+    messages = build_conversation_context(text)
     print("Reply: ", end="")
-    reply = build_sentence_from_stream(stream)
+    reply = build_reply(messages)
     # save reply
     if DevConfig.PREVIOUS_MESSAGES_SAVE_REPLY:
         save_reply(reply)

@@ -16,26 +16,27 @@ playback_queue = queue.Queue()
 
 def monitor_playback_queue(queue):
     while True:
-        audio_data, is_last = queue.get()
-        play_audio_segment(audio_data, is_last=is_last)
+        audio_data = queue.get()
+        play_audio_segment(audio_data)
 
 
-def play_audio_segment(audio_data: bytes, file_format="mp3", is_last=False) -> None:
-    if audio_data:
-        try:
-            audio_segment = AudioSegment.from_file(
-                io.BytesIO(audio_data), format=file_format
-            )
-        except Exception as e:
-            logger.exception(e)
-        else:
-            play(audio_segment)
-    DevConfig.REPLYING = not is_last
+def play_audio_segment(audio_data: bytes, file_format="mp3") -> None:
+    if not audio_data:
+        DevConfig.REPLYING = False
+        return
+    try:
+        audio_segment = AudioSegment.from_file(
+            io.BytesIO(audio_data), format=file_format
+        )
+    except Exception as e:
+        logger.exception(e)
+    else:
+        play(audio_segment)
 
 
 async def process_audio_stream(stream, is_last):
     if not stream:
-        playback_queue.put((b"", is_last))
+        playback_queue.put(b"")
         return
 
     audio_bytes: List[bytes] = []
@@ -47,20 +48,16 @@ async def process_audio_stream(stream, is_last):
     if len(audio_bytes) > 10:
         audio_bytes = audio_bytes[1:-5]
 
-    playback_queue.put((b"".join(audio_bytes), is_last))
+    playback_queue.put(b"".join(audio_bytes))
 
 
 def synthesize_speech_from_text(text: str):
     end_marker = "<END>"
-    if text == "<END>":
-        DevConfig.REPLYING = False
-        return
+    if text == end_marker:
+        stream = None
+    else:
+        stream = edge_tts.Communicate(text, LANG).stream()
 
-    match (text, True):
-        case ("", True):
-            stream = None
-        case _:
-            stream = edge_tts.Communicate(text, LANG).stream()
     asyncio.run(process_audio_stream(stream, False))
 
 
