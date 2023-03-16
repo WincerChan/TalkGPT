@@ -47,14 +47,17 @@ def listen(mic):
         print("\nRecording, please speak...")
         try:
             with mic as source:
-                audio = r.listen(source, phrase_time_limit=DevConfig.MAX_WAIT_SECONDS)
-        except sr.exceptions.WaitTimeoutError:
+                audio = r.listen(
+                    source, phrase_time_limit=DevConfig.MAX_WAIT_SECONDS
+                )
+        except sr.WaitTimeoutError:
             input(
                 f"No sound detected within {DevConfig.MAX_WAIT_SECONDS} seconds, enter hibernation mode, press [Enter] to wake up."
             )
             continue
         else:
             print("Recording finished, processing...")
+        logger.info(audio)
         if DevConfig.REPLYING:
             continue
         yield recognition(audio)

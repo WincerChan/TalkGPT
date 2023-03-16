@@ -18,7 +18,7 @@ class DevConfig:
     API_KEY = os.environ.get("API_KEY")
     REPLYING: bool = False
     # tts 相关
-    AZURE_VOICE_LANG: str = "zh-CN-YunyangNeural"  # "en-US-AriaNeural"
+    AZURE_VOICE_LANG: str = "zh-CN-YunxiNeural"  # "en-US-AriaNeural"
     # AZURE_VOICE_LANG: str = "en-US-AriaNeural"  # "en-US-AnaNeural"
     GOOGLE_VOICE_LANG: str = "zh"
     TTS_CHOICE: str = "EDGE"  # "EDGE", "GOOGLE"

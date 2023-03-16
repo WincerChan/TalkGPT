@@ -1,3 +1,4 @@
+import asyncio
 from tg.chatgpt import ask
 
 from tg.speech_to_text import listen, select_microphone
@@ -10,7 +11,7 @@ def run():
         if not x:
             continue
         print(f"\nAsk: {x}")
-        ask(x)
+        asyncio.run(ask(x))
 
 
 if __name__ == "__main__":

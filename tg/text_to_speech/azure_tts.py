@@ -2,70 +2,91 @@ import edge_tts
 from pydub import AudioSegment
 from typing import List
 from pydub.playback import play
+from concurrent.futures import ThreadPoolExecutor
 import io
-import threading
+import time
 import asyncio
-import queue
 import logging
 from tg.config import DevConfig
 
 LANG = DevConfig.AZURE_VOICE_LANG
 logger = logging.getLogger("azure-ttl")
-playback_queue = queue.Queue()
 
 
-def monitor_playback_queue(queue):
-    while True:
-        audio_data = queue.get()
-        play_audio_segment(audio_data)
+
+class Speech:
 
 
-def play_audio_segment(audio_data: bytes, file_format="mp3") -> None:
-    if not audio_data:
-        DevConfig.REPLYING = False
-        return
-    try:
-        audio_segment = AudioSegment.from_file(
-            io.BytesIO(audio_data), format=file_format
-        )
-    except Exception as e:
-        logger.exception(e)
-    else:
-        play(audio_segment)
+    def __init__(self) -> None:
+        self.audio_queue = asyncio.Queue()
+        self.consumer_task = asyncio.create_task(self.audio_consumer())
+        self.play_tasks = []
+
+    async def wait_for_play(self):
+        await asyncio.gather(*self.play_tasks)
+        await self.do_speak(len(self.play_tasks), "<END>")
+        await self.consumer_task
+
+    async def process_audio_stream(self, idx, stream):
+        if not stream:
+            await self.audio_queue.put((idx, None))
+            return
+
+        audio_bytes: List[bytes] = []
+
+        async for msg in stream:
+            if msg["type"] == "audio" and (data := msg["data"]):
+                audio_bytes.append(data)
+        await stream.aclose()
+        if len(audio_bytes) > 10:
+            audio_bytes = audio_bytes[1:-5]
+        await self.audio_queue.put((idx, b"".join(audio_bytes)))
 
 
-async def process_audio_stream(stream, is_last):
-    if not stream:
-        playback_queue.put(b"")
-        return
+    async def audio_consumer(self):
+        expected_idx = 0
+        loop = asyncio.get_running_loop()
+        while True:
+            idx, audio_data = await self.audio_queue.get()
+            if not audio_data and self.audio_queue.qsize() == 0:
+                DevConfig.REPLYING = False
+                break
+            if expected_idx != idx:
+                # 下标不对，放回
+                await asyncio.sleep(0.1)
+                await self.audio_queue.put((idx, audio_data))
+                continue
+            try:
+                audio_segment = AudioSegment.from_file(io.BytesIO(audio_data), format="mp3")
+            except Exception as e:
+                logger.exception(e)
+            else:
+                await asyncio.to_thread(play, audio_segment)
+                # play(audio_segment)
+                expected_idx += 1
 
-    audio_bytes: List[bytes] = []
+    async def do_speak(self, idx, text):
+        end_marker = "<END>"
+        if text == end_marker:
+            stream = None
+        else:
+            stream = edge_tts.Communicate(text, LANG).stream()
+        await self.process_audio_stream(idx, stream)
 
-    async for msg in stream:
-        if msg["type"] == "audio" and (data := msg["data"]):
-            audio_bytes.append(data)
-
-    if len(audio_bytes) > 10:
-        audio_bytes = audio_bytes[1:-5]
-
-    playback_queue.put(b"".join(audio_bytes))
-
-
-def synthesize_speech_from_text(text: str):
-    end_marker = "<END>"
-    if text == end_marker:
-        stream = None
-    else:
-        stream = edge_tts.Communicate(text, LANG).stream()
-
-    asyncio.run(process_audio_stream(stream, False))
+    def speak_text(self, idx, text):
+        if not text:
+            return
+        task = asyncio.create_task(self.do_speak(idx, text))
+        self.play_tasks.append(task)
 
 
-player_thread = threading.Thread(target=monitor_playback_queue, args=(playback_queue,))
-player_thread.daemon = True
-player_thread.start()
+async def te():
+    sp = Speech()
+    sp.speak_text(0,"二")
+    sp.speak_text(2, "一二三四五六七八九十")
+    sp.speak_text(1, "三四五")
+    sp.speak_text(3,"四")
+    await sp.wait_for_play()
 
 if __name__ == "__main__":
-    while True:
-        text = input("Question:")
-        synthesize_speech_from_text(text)
+    asyncio.run(te())
