@@ -53,7 +53,7 @@ class Speech:
                 break
             if expected_idx != idx:
                 # 下标不对，放回
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.01)
                 await self.audio_queue.put((idx, audio_data))
                 continue
             try:
@@ -63,7 +63,7 @@ class Speech:
             else:
                 await asyncio.to_thread(play, audio_segment)
                 # play(audio_segment)
-                expected_idx += 1
+            expected_idx += 1
 
     async def do_speak(self, idx, text):
         end_marker = "<END>"

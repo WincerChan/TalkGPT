@@ -83,10 +83,6 @@ async def ask(text):
     if DevConfig.PREVIOUS_MESSAGES_SAVE_REPLY:
         save_reply(reply)
 
-    # block when this conversation is not finished.
-    while DevConfig.REPLYING:
-        await asyncio.sleep(0.1)
-
 if __name__ == "__main__":
     while True:
         text = input("\nQuestion: ")
