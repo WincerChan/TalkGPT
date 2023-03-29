@@ -1,67 +1,53 @@
-from gtts import gTTS
-from pydub import AudioSegment
-from typing import List
-from pydub.playback import play
+import asyncio
 import io
 import logging
-import threading
 import queue
+
+from gtts import gTTS
+from pydub import AudioSegment
+from pydub.playback import play
+
 from tg.config import DevConfig
+from tg.text_to_speech.base_tts import BaseSpeech
 
 LANG = DevConfig.GOOGLE_VOICE_LANG
 play_queue = queue.Queue()
 logger = logging.getLogger("google-tts")
 
 
-def wait_for_play(queue):
-    while True:
-        sentence, last = queue.get()
-        play_audio(sentence, last=last)
+class Speech(BaseSpeech):
+    async def _build_async_stream(self, stream):
+        for msg in stream:
+            yield await asyncio.to_thread(lambda: msg)
 
+    async def process_audio_stream(self, idx, stream):
+        if not stream:
+            await self.audio_queue.put((idx, None))
+            return
 
-def play_audio(audio_data: bytes, file_format="mp3", last=False) -> None:
-    # Create audio segment from audio data
-    if audio_data:
+        async for msg in self._build_async_stream(stream):
+            # 去掉首尾空白片段
+            start_index = int(len(msg) // 120)
+            end_index = int(len(msg) // 20)
+            await self.audio_queue.put((idx, msg[start_index:]))
+
+    def get_stream(self, text):
         try:
-            audio_segment = AudioSegment.from_file(
-                io.BytesIO(audio_data), format=file_format
-            )
+            g_comm = gTTS(text, lang=LANG)
         except Exception as e:
             logger.exception(e)
         else:
-            play(audio_segment)
-    DevConfig.REPLYING = not last
+            return g_comm.stream()
 
 
-def handle_stream(stream, last):
-    if not stream:
-        play_queue.put((b"", last))
-        return
+async def te():
+    sp = Speech()
+    sp.speak_text(0, "二")
+    sp.speak_text(2, "一二三四五六七八九十")
+    sp.speak_text(1, "三四五")
+    sp.speak_text(3, "四")
+    await sp.wait_for_play()
 
-    for msg in stream:
-        # 去掉首尾空白片段
-        start_index = int(len(msg) // 120)
-        end_index = int(len(msg) // 20)
-        play_queue.put((msg[start_index:-end_index], last))
-
-
-def speak_text(text: str, last=False):
-    if len(text) < 1:
-        handle_stream(None, last)
-        return
-    try:
-        g_comm = gTTS(text, lang=LANG)
-    except Exception as e:
-        logger.exception(e)
-    else:
-        handle_stream(g_comm.stream(), last)
-
-
-player_worker = threading.Thread(target=wait_for_play, args=(play_queue,))
-player_worker.daemon = True
-player_worker.start()
 
 if __name__ == "__main__":
-    while True:
-        text = input("Question:")
-        speak_text(text)
+    asyncio.run(te())

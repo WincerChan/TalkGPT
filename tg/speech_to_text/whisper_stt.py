@@ -1,6 +1,8 @@
-import speech_recognition as sr
-from tg.config import DevConfig
 import logging
+
+import speech_recognition as sr
+
+from tg.config import DevConfig
 
 r = sr.Recognizer()
 

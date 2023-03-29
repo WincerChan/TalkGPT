@@ -8,7 +8,7 @@
             "name": "Python: tts",
             "type": "python",
             "request": "launch",
-            "module": "tg.text_to_speech.text_to_speech",
+            "module": "tg.app",
             "justMyCode": true
         }
     ]

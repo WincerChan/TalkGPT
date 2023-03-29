@@ -1,10 +1,12 @@
-import logging
-import openai
 import asyncio
-import time
+import logging
+
+import openai
+
 from tg.config import DevConfig
-from ..text_to_speech.text_to_speech import speak_text
-from .utils import contains_delimiter, CircularConversation
+
+from ..text_to_speech.text_to_speech import Speech
+from .utils import CircularConversation, contains_delimiter
 
 openai.api_key = DevConfig.API_KEY
 # one conversation = 1 ask + 1 reply
@@ -12,11 +14,15 @@ PREVIOUS_CONVERSATIONS = CircularConversation(DevConfig.PREVIOUS_MESSAGES_COUNT 
 logger = logging.getLogger("chatgpt")
 
 
-def to_speak(words, last=False):
+def _words_to_sentence(words):
     sentence = "".join(words).replace("\n\n", "\n")
-
     print(sentence, end="", flush=True)
-    speak_text(sentence, last=last)
+    return sentence
+
+
+def words_to_speek(speech, idx, words):
+    sentence = _words_to_sentence(words)
+    speech.speak_text(idx, sentence)
     return sentence
 
 
@@ -31,25 +37,26 @@ def build_conversation_context(text):
     return messages
 
 
-def build_sentence_from_stream(stream) -> str:
-    reply = ""
-    words = []
-    print("Reply: ", end="")
-    for word in stream:
-        best_choice = word["choices"][0]
-        content = best_choice.get("delta").get("content")
-        if content is None:
-            continue
+async def build_sentence_from_stream(async_stream) -> str:
+    reply, words = [], []
+    idx = 0
+    speech = Speech()
+    async for choice in async_stream:
+        content: str
+        if content := choice["delta"].get("content"):
+            words.append(content.replace("\n", "", 1))
 
-        words.append(content)
+        reply_finished = choice["finish_reason"] == "stop"
 
-        if contains_delimiter(content) and len(words) > 10:
-            reply += to_speak(words)
+        is_complete_sentence = contains_delimiter(content) and len(words) > 10
+
+        if is_complete_sentence or reply_finished:
+            reply.append(words_to_speek(speech, idx, words[:]))
+            idx += 1
             words.clear()
 
-    reply += to_speak(words, last=True)
-    print("\n")
-    return reply
+    await speech.wait_for_play()
+    return "".join(reply)
 
 
 def save_reply(raw_reply):
@@ -57,26 +64,28 @@ def save_reply(raw_reply):
     PREVIOUS_CONVERSATIONS.push_reply(reply)
 
 
-def ask(text):
-    DevConfig.REPLYING = True
-    messages = build_conversation_context(text)
+async def build_async_stream(messages):
     stream = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=messages,
         temperature=0,
         stream=True,
     )
-    reply = build_sentence_from_stream(stream)
+    for word in stream:
+        yield await asyncio.to_thread(lambda: word["choices"][0])
+
+
+async def ask(text):
+    DevConfig.REPLYING = True
+    messages = build_conversation_context(text)
+    print("Reply: ", end="", flush=True)
+    async_stream = build_async_stream(messages)
+    reply = await build_sentence_from_stream(async_stream)
     # save reply
     if DevConfig.PREVIOUS_MESSAGES_SAVE_REPLY:
         save_reply(reply)
 
-    # block when this conversation is not finished.
-    while DevConfig.REPLYING:
-        time.sleep(0.1)
-
-
 if __name__ == "__main__":
     while True:
-        text = input("Question: ")
-        ask(text)
+        text = input("\nQuestion: ")
+        asyncio.run(ask(text))
