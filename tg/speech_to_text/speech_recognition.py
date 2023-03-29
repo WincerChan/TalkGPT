@@ -1,8 +1,10 @@
-from tg.config import DevConfig
-import speech_recognition as sr
 import logging
-from tg.config import DevConfig
+from itertools import count
+
+import speech_recognition as sr
 from dotenv import set_key
+
+from tg.config import DevConfig
 
 match DevConfig.STT_CHOICE:
     case "WHISPER":
@@ -16,6 +18,14 @@ logger = logging.getLogger("stt")
 r = sr.Recognizer()
 
 
+def devices_changed():
+    audio = sr.Microphone.get_pyaudio().PyAudio()
+    now_count = audio.get_device_count()
+    before_count = DevConfig.MIC_DEVICE_COUNT
+    set_key(".env", "MIC_DEVICE_COUNT", f"{now_count}")
+    return f"{now_count}" != before_count
+
+
 def list_input_device():
     audio = sr.Microphone.get_pyaudio().PyAudio()
     for i in range(audio.get_device_count()):
@@ -25,6 +35,8 @@ def list_input_device():
 
 
 def select_microphone():
+    if devices_changed():
+        DevConfig.MIC_DEVICE_INDEX = None
     if DevConfig.MIC_DEVICE_INDEX is None:
         print("Your device has many microphones: ")
     device_ids = []
@@ -39,6 +51,7 @@ def select_microphone():
     if DevConfig.MIC_DEVICE_INDEX is None:
         device_index = device_ids[int(input("Please choose one: ")) - 1]
         set_key(".env", "MIC_DEVICE_INDEX", f"{device_index}")
+    # log device index
     return sr.Microphone(device_index=device_index)
 
 
@@ -47,9 +60,7 @@ def listen(mic):
         print("\nRecording, please speak...")
         try:
             with mic as source:
-                audio = r.listen(
-                    source, phrase_time_limit=DevConfig.MAX_WAIT_SECONDS
-                )
+                audio = r.listen(source, phrase_time_limit=DevConfig.MAX_WAIT_SECONDS)
         except sr.WaitTimeoutError:
             input(
                 f"No sound detected within {DevConfig.MAX_WAIT_SECONDS} seconds, enter hibernation mode, press [Enter] to wake up."
@@ -57,7 +68,6 @@ def listen(mic):
             continue
         else:
             print("Recording finished, processing...")
-        logger.info(audio)
         if DevConfig.REPLYING:
             continue
         yield recognition(audio)
