@@ -1,10 +1,12 @@
-import logging
-import openai
 import asyncio
-import time
+import logging
+
+import openai
+
 from tg.config import DevConfig
+
 from ..text_to_speech.text_to_speech import Speech
-from .utils import contains_delimiter, CircularConversation
+from .utils import CircularConversation, contains_delimiter
 
 openai.api_key = DevConfig.API_KEY
 # one conversation = 1 ask + 1 reply

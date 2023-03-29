@@ -1,6 +1,7 @@
-from dotenv import load_dotenv as _load_env
-import os
 import logging
+import os
+
+from dotenv import load_dotenv as _load_env
 
 logging.root.setLevel(logging.INFO)
 formatter = logging.Formatter(
@@ -25,10 +26,11 @@ class DevConfig:
 
     # stt 相关
     MIC_DEVICE_INDEX = os.environ.get("MIC_DEVICE_INDEX")
+    MIC_DEVICE_COUNT = os.environ.get("MIC_DEVICE_COUNT", "-1")
     MAX_WAIT_SECONDS = 5
     # stt 选择 google 的时候，需要设置语言；选择 whisper 的话不用
     GOOGLE_INPUT_LANG = "zh-CN"
-    STT_CHOICE = "GOOGLE"  # "GOOGLE", "WHISPER"
+    STT_CHOICE = "WHISPER"  # "GOOGLE", "WHISPER"
 
     # chatgpt 相关
     PREVIOUS_MESSAGES_COUNT: int = 3  # 0 means no contextual conversation

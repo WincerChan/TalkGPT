@@ -1,5 +1,4 @@
 import logging
-from itertools import count
 
 import speech_recognition as sr
 from dotenv import set_key

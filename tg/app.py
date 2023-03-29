@@ -1,8 +1,7 @@
 import asyncio
-from tg.chatgpt import ask
 
+from tg.chatgpt import ask
 from tg.speech_to_text import listen, select_microphone
-from tg.config import DevConfig
 
 
 def run():
@@ -17,5 +16,6 @@ def run():
 if __name__ == "__main__":
     try:
         run()
+    # Ctrl+C to exit
     except KeyboardInterrupt:
         exit(0)
